@@ -6,17 +6,18 @@ import ToastShelf from '../ToastShelf'
 
 
 import styles from './ToastPlayground.module.css';
+import { ToastContext } from '../ToastProvider';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
-  const [message, setMessage] = React.useState("")
+  const [message, setMessage] = React.useState("");
   const [variantSelected, setVariantSelected] = React.useState("notice")
-  const [toasts, setToasts] = React.useState([])
   const resetForm = () => {
     setMessage("")
     setVariantSelected("notice")
   }
+  const { createToast } = React.useContext(ToastContext)
 
   return (
     <div className={styles.wrapper}>
@@ -24,12 +25,11 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-
-      {toasts?.length > 0 && <ToastShelf toasts={toasts} setToasts={setToasts} />}
+      <ToastShelf/>
 
       <form className={styles.controlsWrapper} onSubmit={(event) => {
         event.preventDefault()
-        setToasts([...toasts, { id: crypto.randomUUID(),message: message, variant: variantSelected }])
+        createToast(message, variantSelected)
         resetForm()
       }}>
         <div className={styles.row}>
@@ -54,7 +54,7 @@ function ToastPlayground() {
 
             {/* TODO Other Variant radio buttons here */}
             {VARIANT_OPTIONS.map((option, index) => (
-              <VariantInput variant={option} variantSelected={variantSelected} setVariantSelected={setVariantSelected} key={index} />
+              <VariantInput variantSelected={variantSelected} setVariantSelected={setVariantSelected} variant={option} key={index} />
             ))}
           </div>
         </div>
@@ -72,4 +72,4 @@ function ToastPlayground() {
   );
 }
 
-export default React.memo(ToastPlayground);
+export default ToastPlayground;

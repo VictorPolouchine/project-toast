@@ -1,15 +1,16 @@
 import React from 'react';
 
 import Toast from '../Toast';
+import { ToastContext } from '../ToastProvider';
 import styles from './ToastShelf.module.css';
 
-function ToastShelf({ toasts, setToasts }) {
+function ToastShelf() {
+  const {toasts} = React.useContext(ToastContext)
   return (
-    <ol className={styles.wrapper}>
+    <ol role="region" aria-live="polite" aria-label="Notification" className={styles.wrapper}>
       {toasts && toasts.map((toast) => {
-        const id = crypto.randomUUID()
-        return (<li className={styles.toastWrapper} key={id}>
-          <Toast variant={toast.variant} message={toast.message} setToasts={setToasts} toasts={toasts} id={toast.id}/>
+        return (<li className={styles.toastWrapper} key={toast.id}>
+          <Toast variant={toast.variant} message={toast.message} id={toast.id}/>
         </li>)
       })}
     </ol>

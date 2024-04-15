@@ -6,6 +6,7 @@ import {
   Info,
   X,
 } from 'react-feather';
+import { ToastContext } from '../ToastProvider';
 
 import VisuallyHidden from '../VisuallyHidden';
 
@@ -19,19 +20,22 @@ const ICONS_BY_VARIANT = {
 };
 
 
-function Toast({message, variant, toasts, setToasts, ...delegated}) {
-  const toastRef = React.useRef();
+function Toast({message, variant, ...delegated}) {
+  const {dismissToast} = React.useContext(ToastContext)
   const ToastIcon = ICONS_BY_VARIANT[variant]
   return (
-    <div ref={toastRef} className={`${styles.toast} ${styles[variant]}`}>
+    <div className={`${styles.toast} ${styles[variant]}`}>
       <div className={styles.iconContainer}>
         <ToastIcon size={24} />
       </div>
       <p className={styles.content}>
+        <VisuallyHidden>
+          {variant}
+        </VisuallyHidden>
         {message}
       </p>
-      <button className={styles.closeButton} onClick={() => {
-        setToasts(toasts.filter((toast) => toast.id !== delegated.id))
+      <button aria-label="Dismiss message" aria-live="off" className={styles.closeButton} onClick={() => {
+          dismissToast(delegated.id)
         }}>
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
@@ -40,4 +44,4 @@ function Toast({message, variant, toasts, setToasts, ...delegated}) {
   );
 }
 
-export default React.memo(Toast);
+export default Toast;

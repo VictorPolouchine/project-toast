@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToastContext } from '../ToastProvider';
 
 function VariantInput({ variant, variantSelected, setVariantSelected }) {
   return (
